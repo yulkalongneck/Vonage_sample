@@ -25,12 +25,40 @@ function handleError(error) {
 function subscribeToVideo( subscriber )
 {
   if ($('#video').length === 0) {
-    $('#subscribeToVideo').append('<button id="video" type="button" name="button">video</button>');
+    $('#subscriberPanel').append('<button id="video" type="button" class="btn btn-success" name="button">video on</button>');
     $("#video").on('click', function(){
+      if($(this).hasClass('btn btn-success')){
         subscriber.subscribeToVideo(false);
+        $(this).removeClass('btn btn-success').addClass('btn btn-danger');
+        $(this).text('video off');
+      } else {
+        subscriber.subscribeToVideo(true);
+        $(this).removeClass('btn btn-danger').addClass('btn btn-success');
+        $(this).text('video on');
+      }
     });
   }
+
 }
+function subscribeToAudio( subscriber )
+{
+  if ($('#audio').length === 0) {
+    $('#subscriberPanel').append('<button id="audio" type="button" class="btn btn-success" name="button">audio on</button>');
+    $("#audio").on('click', function(){
+      if($(this).hasClass('btn btn-success')){
+        subscriber.subscribeToAudio(false);
+        $(this).removeClass('btn btn-success').addClass('btn btn-danger');
+        $(this).text('audio off');
+      } else {
+        subscriber.subscribeToAudio(true);
+        $(this).removeClass('btn btn-danger').addClass('btn btn-success');
+        $(this).text('audio on');
+      }
+    });
+  }
+
+}
+
 
 function initializeSession() {
   var session = OT.initSession(apiKey, sessionId);
@@ -39,15 +67,14 @@ function initializeSession() {
     insertMode: 'append',
     width: '100%',
     height: '100%',
-    subscribeToVideo: true,
-    subscribeToAudio: true
+    name : 'Guest'
   }
 
   session.on('streamCreated', function(event) {
     var subscriber = session.subscribe(event.stream, 'subscriber', subscriberOptions , handleError);
     subscribeToVideo(subscriber);
+    subscribeToAudio(subscriber);
   });
-
 
   // Create a publisher
   var publisherOptions = {

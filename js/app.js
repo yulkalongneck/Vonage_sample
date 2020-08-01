@@ -1,9 +1,19 @@
 // replace these values with those generated in your TokBox Account
-var apiKey = CONFIG.api_key;
-var sessionId = CONFIG.session_ID;
-var token = CONFIG.token;
+var apiKey = "";
+var sessionId = "";
+var token = "";
 
 // (optional) add server code here
+var SERVER_BASE_URL = 'https://vonagetestserver.herokuapp.com';
+   fetch(SERVER_BASE_URL + '/session').then(function(res) {
+     return res.json()
+   }).then(function(res) {
+     apiKey = res.apiKey;
+     sessionId = res.sessionId;
+     token = res.token;
+     initializeSession();
+   }).catch(handleError);
+
 
 // Handling all of our errors here by alerting them
 function handleError(error) {
@@ -62,4 +72,4 @@ function initializeSession() {
 
 }
 
-initializeSession();
+//initializeSession();

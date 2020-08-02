@@ -34,12 +34,17 @@ body, html {
   z-index: 9;
 
 }
-#video {
+/* #publisherPanel {
+  position: absolute;
+  z-index: 9;
+
+} */
+.video {
   top: 10px;
   position: absolute;
   left: 110px;
 }
-#audio {
+.audio {
   top: 10px;
   position: absolute;
   left: 10px;

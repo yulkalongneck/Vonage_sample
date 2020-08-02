@@ -22,36 +22,36 @@ function handleError(error) {
   }
 }
 
-function subscribeToVideo( subscriber )
+function subscribeToVideo( role, element )
 {
-  if ($('#video').length === 0) {
-    $('#subscriberPanel').append('<button id="video" type="button" class="btn btn-success" name="button">video on</button>');
-    $("#video").on('click', function(){
-      if($(this).hasClass('btn btn-success')){
-        subscriber.subscribeToVideo(false);
-        $(this).removeClass('btn btn-success').addClass('btn btn-danger');
+  if ($('#video-'+role.id).length === 0) {
+    $('#'+ element +'Panel').append('<button id=video-'+ role.id +' type="button" class="video btn btn-success" name="button">video on</button>');
+    $('#video-'+role.id).on('click', function(){
+      if($(this).hasClass('video btn btn-success')){
+        role.subscribeToVideo(false);
+        $(this).removeClass('video btn btn-success').addClass('video btn btn-danger');
         $(this).text('video off');
       } else {
-        subscriber.subscribeToVideo(true);
-        $(this).removeClass('btn btn-danger').addClass('btn btn-success');
+        role.subscribeToVideo(true);
+        $(this).removeClass('video btn btn-danger').addClass('video btn btn-success');
         $(this).text('video on');
       }
     });
   }
 
 }
-function subscribeToAudio( subscriber )
+function subscribeToAudio( role, element )
 {
-  if ($('#audio').length === 0) {
-    $('#subscriberPanel').append('<button id="audio" type="button" class="btn btn-success" name="button">audio on</button>');
-    $("#audio").on('click', function(){
-      if($(this).hasClass('btn btn-success')){
-        subscriber.subscribeToAudio(false);
-        $(this).removeClass('btn btn-success').addClass('btn btn-danger');
+  if ($('#audio-'+role.id).length === 0) {
+    $('#'+ element +'Panel').append('<button id=audio-'+role.id+' type="button" class="audio btn btn-success" name="button">audio on</button>');
+    $('#audio-'+role.id).on('click', function(){
+      if($(this).hasClass('audio btn btn-success')){
+        role.subscribeToAudio(false);
+        $(this).removeClass('audio btn btn-success').addClass(' audio btn btn-danger');
         $(this).text('audio off');
       } else {
-        subscriber.subscribeToAudio(true);
-        $(this).removeClass('btn btn-danger').addClass('btn btn-success');
+        role.subscribeToAudio(true);
+        $(this).removeClass('audio btn btn-danger').addClass('audio btn btn-success');
         $(this).text('audio on');
       }
     });
@@ -72,8 +72,8 @@ function initializeSession() {
 
   session.on('streamCreated', function(event) {
     var subscriber = session.subscribe(event.stream, 'subscriber', subscriberOptions , handleError);
-    subscribeToVideo(subscriber);
-    subscribeToAudio(subscriber);
+    subscribeToVideo(subscriber, 'subscriber');
+    subscribeToAudio(subscriber, 'subscriber');
 
   });
 
@@ -88,20 +88,17 @@ function initializeSession() {
   var publisher = OT.initPublisher('publisher', publisherOptions, handleError);
 
   // Connect to the session
-  session.connect(token, function(error) {
+   session.connect(token, function(error) {
     // If the connection is successful, publish to the session
     if (error) {
       handleError(error);
     } else {
       session.publish(publisher, handleError);
+      //subscribeToVideo(publisher, 'publisher');
+      //subscribeToAudio(publisher, 'publisher');
     }
   });
 
-  session.on("streamPropertyChanged", function (event) {
-    var subscribers = session.getSubscribersForStream(event.stream);
-    for (var i = 0; i < subscribers.length; i++) {
-        console.log(subscribers[i]);
-    }
-  });
+
 
 }

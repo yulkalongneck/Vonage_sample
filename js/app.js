@@ -74,6 +74,7 @@ function initializeSession() {
     var subscriber = session.subscribe(event.stream, 'subscriber', subscriberOptions , handleError);
     subscribeToVideo(subscriber);
     subscribeToAudio(subscriber);
+
   });
 
   // Create a publisher
@@ -81,7 +82,7 @@ function initializeSession() {
     insertMode: 'append',
     width: '100%',
     height: '100%',
-    name : "Julia"
+    name : 'Julia'
   }
 
   var publisher = OT.initPublisher('publisher', publisherOptions, handleError);
@@ -96,7 +97,11 @@ function initializeSession() {
     }
   });
 
+  session.on("streamPropertyChanged", function (event) {
+    var subscribers = session.getSubscribersForStream(event.stream);
+    for (var i = 0; i < subscribers.length; i++) {
+        console.log(subscribers[i]);
+    }
+  });
 
 }
-
-//initializeSession();
